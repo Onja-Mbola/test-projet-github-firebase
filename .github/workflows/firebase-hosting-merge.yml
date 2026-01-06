@@ -32,4 +32,4 @@ jobs:
       - name: Deploy to Firebase
         run: firebase deploy --only hosting,functions --project test-projet-github-firebase
         env:
-          FIREBASE_TOKEN: ${{ secrets.FIREBASE_TOKEN }}
+          FIREBASE_TOKEN: ${{ secrets.NEXT_PUBLIC_FIREBASE_TOKEN }}
