@@ -30,6 +30,6 @@ jobs:
         run: npm install -g firebase-tools
 
       - name: Deploy to Firebase
-        run: firebase deploy --only hosting,functions --project test-projet-github-firebase
+        run: firebase deploy --only hosting --project test-projet-github-firebase
         env:
           FIREBASE_TOKEN: ${{ secrets.NEXT_PUBLIC_FIREBASE_TOKEN }}
