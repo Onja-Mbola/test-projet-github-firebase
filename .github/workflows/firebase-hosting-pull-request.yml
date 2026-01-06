@@ -36,6 +36,5 @@ jobs:
 
       - name: Deploy to Firebase
         run: firebase deploy --only hosting,functions --project test-projet-github-firebase
-      - name: Deploy preview to Firebase
         env:
-          FIREBASE_TOKEN: ${{ secrets.FIREBASE_SERVICE_ACCOUNT_TEST_PROJET_GITHUB_FIREBASE }}
+          FIREBASE_TOKEN: ${{ secrets.FIREBASE_TOKEN }}
