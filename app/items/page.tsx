@@ -1,3 +1,6 @@
+"use client";
+
+import { useEffect, useState } from "react";
 import { db } from "@/lib/firebase";
 import { collection, getDocs } from "firebase/firestore";
 import AddItem from "@/components/AddItem";
@@ -7,16 +10,21 @@ type Item = {
   name: string;
 };
 
-async function getItems(): Promise<Item[]> {
-  const querySnapshot = await getDocs(collection(db, "items"));
-  return querySnapshot.docs.map(doc => ({
-    id: doc.id,
-    ...(doc.data() as Omit<Item, "id">),
-  }));
-}
+export default function ItemsPage() {
+  const [items, setItems] = useState<Item[]>([]);
 
-export default async function ItemsPage() {
-  const items = await getItems();
+  useEffect(() => {
+    async function fetchItems() {
+      const querySnapshot = await getDocs(collection(db, "items"));
+      setItems(
+        querySnapshot.docs.map(doc => ({
+          id: doc.id,
+          ...(doc.data() as Omit<Item, "id">),
+        }))
+      );
+    }
+    fetchItems();
+  }, []);
 
   return (
     <div className="max-w-3xl mx-auto p-6">
