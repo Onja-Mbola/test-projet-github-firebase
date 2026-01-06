@@ -43,8 +43,8 @@ export default function ItemsPage() {
           >
             <span className="font-semibold">{item.name}</span>
             <span>Quantité : {item.quantity}</span>
-            <span>Prix unitaire : {item.unitPrice.toFixed(2)} €</span>
-            <span className="font-bold">Total : {item.totalPrice.toFixed(2)} €</span>
+            <span>Prix unitaire : {item.unitPrice.toFixed(2)} Ariary</span>
+            <span className="font-bold">Total : {item.totalPrice.toFixed(2)} Ariary</span>
           </li>
         ))}
       </ul>
