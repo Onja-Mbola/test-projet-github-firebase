@@ -1,58 +1,53 @@
-import Image from "next/image";
-import AddItem from "@/components/AddItem";
+"use client";
+
+import { useEffect, useState } from "react";
 import { db } from "@/lib/firebase";
-import { collection, getDocs } from "firebase/firestore";
+import { collection, onSnapshot, query, orderBy } from "firebase/firestore";
+import AddItem from "@/components/AddItem";
 
 type Item = {
   id: string;
   name: string;
+  quantity: number;
+  unitPrice: number;
+  totalPrice: number;
 };
 
-async function getItems(): Promise<Item[]> {
-  const querySnapshot = await getDocs(collection(db, "items"));
-  return querySnapshot.docs.map(doc => ({
-    id: doc.id,
-    ...(doc.data() as Omit<Item, "id">),
-  }));
-}
+export default function ItemsPage() {
+  const [items, setItems] = useState<Item[]>([]);
 
+  useEffect(() => {
+    const colRef = collection(db, "items");
+    const q = query(colRef, orderBy("createdAt", "desc"));
 
-export default async function Home() {
-  const items = await getItems();
+    const unsubscribe = onSnapshot(q, snapshot => {
+      const newItems = snapshot.docs.map(doc => ({
+        id: doc.id,
+        ...(doc.data() as Omit<Item, "id">),
+      }));
+      setItems(newItems);
+    });
+
+    return () => unsubscribe(); 
+  }, []);
 
   return (
-    <div className="flex min-h-screen items-center justify-center bg-zinc-50 font-sans dark:bg-black">
-      <main className="flex min-h-screen w-full max-w-3xl flex-col items-center justify-between py-32 px-16 bg-white dark:bg-black sm:items-start">
-
-        <Image
-          className="dark:invert"
-          src="/next.svg"
-          alt="Next.js logo"
-          width={100}
-          height={20}
-          priority
-        />
-
-        <div className="flex flex-col items-center gap-6 text-center sm:items-start sm:text-left">
-          <h1 className="max-w-xs text-3xl font-semibold leading-10 tracking-tight text-black dark:text-zinc-50">
-            Ma jolie liste sur la page d'accueil
-          </h1>
-        </div>
-
-        <AddItem />
-
-        <ul className="space-y-4 w-full">
-          {items.map(item => (
-            <li
-              key={item.id}
-              className="p-4 border rounded-lg shadow hover:shadow-lg transition"
-            >
-              {item.name}
-            </li>
-          ))}
-        </ul>
-      </main>
+    <div className="max-w-3xl mx-auto p-6">
+      <h1 className="text-3xl font-bold mb-6">Liste des courses</h1>
+      <AddItem />
+      <ul className="space-y-4">
+        {items.map(item => (
+          <li
+            key={item.id}
+            className="p-4 border rounded-lg shadow hover:shadow-lg transition flex flex-col sm:flex-row sm:justify-between sm:items-center gap-2"
+          >
+            <span className="font-semibold">{item.name}</span>
+            <span>Quantité : {item.quantity}</span>
+            <span>Prix unitaire : {item.unitPrice.toFixed(2)} Ariary</span>
+            <span className="font-bold">Total : {item.totalPrice.toFixed(2)} Ariary</span>
+          </li>
+        ))}
+      </ul>
     </div>
   );
 }
-
