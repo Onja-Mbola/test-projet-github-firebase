@@ -72,7 +72,7 @@ export default function AddItem() {
         />
       </div>
       <p className="text-gray-700 font-medium">
-        Prix total : <span className="font-bold">{totalPrice.toFixed(2)} €</span>
+        Prix total : <span className="font-bold">{totalPrice.toFixed(2)} Ariary</span>
       </p>
       <button
         type="submit"
